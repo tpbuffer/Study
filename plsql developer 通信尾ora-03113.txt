@@ -1,0 +1,19 @@
+http://www.2cto.com/database/201308/235338.html
+
+###################################################################################
+第二步：
+select * from v$recovery_file_dest;
+alter system set db_recovery_file_dest_size=10737418240 ---这里是改为10G。
+alter database open
+exit
+第三步：
+rman target /
+进入rman工具窗口
+rman target /
+RMAN>crosscheck archivelog all;  -- 运行这个命令可以把无效的expired的archivelog标出来。
+RMAN>delete expired archivelog all; -- 直接全部删除过期的归档日志。
+RMAN>delete noprompt archivelog until time "sysdate -3";  -- 也可以直接用一个指定的日期来删除。
+
+
+D:\oracle\product\10.2.0\admin\orcl\bdump
+定期删除里面的错误文件
